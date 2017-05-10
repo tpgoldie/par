@@ -1,6 +1,6 @@
-package com.tpg.par.web.controllers;
+package com.tpg.par.web.app;
 
-import com.tpg.par.web.app.ParWebApplication;
+import com.tpg.par.web.controllers.HealthCheckController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,26 +10,27 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.boot.actuate.health.Status.UP;
 import static org.springframework.http.MediaType.TEXT_HTML;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {ParWebApplication.class})
-@WebMvcTest(SearchController.class)
+@WebMvcTest(HealthCheckController.class)
 @AutoConfigureMockMvc
-public class SearchControllerTest {
+public class HealthCheckControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void handleIndexRequest_indexRequest_indexViewReturned() throws Exception {
-        mockMvc.perform(get("/par/")
+    public void handleHealthCheckRequest_healthCheckRequest_healthCheckStatusGiven() throws Exception {
+        mockMvc.perform(get("/par/health")
                 .contentType(TEXT_HTML))
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(view().name("index"));
+            .andExpect(jsonPath("$.status", is(UP.getCode())));
     }
 }

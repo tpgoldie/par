@@ -1,6 +1,11 @@
 package com.tpg.par.web.controllers;
 
-import com.tpg.par.domain.*;
+import com.tpg.par.domain.Address;
+import com.tpg.par.domain.DecisionStatus;
+import com.tpg.par.domain.SearchRequest;
+import com.tpg.par.domain.SearchResult;
+import com.tpg.par.domain.builders.AddressBuilder;
+import com.tpg.par.domain.builders.SearchResultBuilder;
 import com.tpg.par.web.request.SimpleSearchRequest;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,10 +75,11 @@ public class SearchControllerTest extends ControllerTest {
         indices.stream().forEach(i -> {
             try {
                 output
-                    .andExpect(jsonPath(String.format("$[%d].summary", i), is(searchResults.get(i).getSummary())))
-                    .andExpect(jsonPath(String.format("$[%d].referenceNumber", i), is(searchResults.get(i).getReferenceNumber())))
-                    .andExpect(jsonPath(String.format("$[%d].formattedDateReceived", i), is(searchResults.get(i).getFormattedDateReceived())))
-                    .andExpect(jsonPath(String.format("$[%d].formattedDateValidated", i), is(searchResults.get(i).getFormattedDateValidated())));
+                    .andDo(print())
+                    .andExpect(jsonPath(String.format("$.values[%d].summary", i), is(searchResults.get(i).getSummary())))
+                    .andExpect(jsonPath(String.format("$.values[%d].referenceNumber", i), is(searchResults.get(i).getReferenceNumber())))
+                    .andExpect(jsonPath(String.format("$.values[%d].formattedDateReceived", i), is(searchResults.get(i).getFormattedDateReceived())))
+                    .andExpect(jsonPath(String.format("$.values[%d].formattedDateValidated", i), is(searchResults.get(i).getFormattedDateValidated())));
             } catch (Exception e) {
             }
         });

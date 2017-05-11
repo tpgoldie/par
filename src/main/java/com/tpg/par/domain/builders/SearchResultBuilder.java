@@ -1,4 +1,8 @@
-package com.tpg.par.domain;
+package com.tpg.par.domain.builders;
+
+import com.tpg.par.domain.Address;
+import com.tpg.par.domain.DecisionStatus;
+import com.tpg.par.domain.SearchResult;
 
 import java.time.ZonedDateTime;
 

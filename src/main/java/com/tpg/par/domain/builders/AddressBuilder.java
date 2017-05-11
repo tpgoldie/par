@@ -1,4 +1,6 @@
-package com.tpg.par.domain;
+package com.tpg.par.domain.builders;
+
+import com.tpg.par.domain.Address;
 
 import static java.util.Optional.empty;
 

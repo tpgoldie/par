@@ -1,9 +1,6 @@
 package com.tpg.par.web.controllers;
 
-import com.tpg.par.domain.DecisionStatus;
-import com.tpg.par.domain.SearchFor;
-import com.tpg.par.domain.SearchRequest;
-import com.tpg.par.domain.SearchResult;
+import com.tpg.par.domain.*;
 import com.tpg.par.service.ApplicationQueryService;
 import com.tpg.par.web.request.SimpleSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +33,13 @@ public class SearchController {
 
     @PostMapping(value = "/search", consumes = APPLICATION_FORM_URLENCODED_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
     public @ResponseBody
-    ResponseEntity<List<SearchResult>> handleSearchRequest(SimpleSearchRequest simpleSearchRequest) {
+    ResponseEntity<SearchResults> handleSearchRequest(SimpleSearchRequest simpleSearchRequest) {
         SearchRequest searchRequest = new SearchRequest(SearchFor.valueOf(simpleSearchRequest.getSearchFor()),
                 simpleSearchRequest.getSearchTerm(),
                 DecisionStatus.valueOf(simpleSearchRequest.getDecisionStatus()));
 
         List<SearchResult> searchResults = applicationQueryService.findApplications(searchRequest);
 
-        return new ResponseEntity<List<SearchResult>>(searchResults, OK);
+        return new ResponseEntity<>(new SearchResults(searchResults), OK);
     }
 }

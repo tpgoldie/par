@@ -10,7 +10,10 @@ import com.tpg.par.web.request.SimpleSearchRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.ZoneId;
@@ -20,6 +23,7 @@ import java.util.List;
 import static com.tpg.par.domain.DecisionStatus.Decided;
 import static com.tpg.par.domain.SearchFor.Applications;
 import static java.util.Arrays.asList;
+import static java.util.Locale.UK;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
@@ -38,6 +42,12 @@ public class SearchControllerTest extends ControllerTest {
     private AddressBuilder addressBuilder;
     private SearchResultBuilder searchResultBuilder;
 
+    @MockBean(name = "messageSource")
+    private MessageSource messageSource;
+
+    @MockBean(name = "healthIndicator")
+    private HealthIndicator healthIndicator;
+
     @Before
     public void setUp() {
         addressBuilder = new AddressBuilder();
@@ -47,11 +57,33 @@ public class SearchControllerTest extends ControllerTest {
 
     @Test
     public void handleIndexRequest_indexRequest_indexViewReturned() throws Exception {
+        String title = "Public Access Register";
+        String h1 = "Welcome to the Public Access Register";
+        String h2 = "Planning >> Simple Search";
+        String searchSummary = "Search for planning applications, appeals and enforcements by keyword, application reference, postcode or by a single line of an address.";
+
+        String[] emptyArray = new String[0];
+
+        when(messageSource.getMessage("index.title", emptyArray, UK)).thenReturn(title);
+        when(messageSource.getMessage("index.h1", emptyArray, UK)).thenReturn(h1);
+        when(messageSource.getMessage("index.h2", emptyArray, UK)).thenReturn(h2);
+        when(messageSource.getMessage("index.searchSummary", emptyArray, UK)).thenReturn(searchSummary);
+
         mockMvc.perform(get("/par/")
-                .contentType(TEXT_HTML))
+            .contentType(TEXT_HTML)
+                .locale(UK))
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(view().name("index"));
+            .andExpect(view().name("index"))
+        .andExpect(model().attribute("title", title))
+        .andExpect(model().attribute("welcome", h1))
+        .andExpect(model().attribute("simpleSearchSubTitle", h2))
+        .andExpect(model().attribute("searchSummary", searchSummary));
+
+        verify(messageSource).getMessage("index.title", emptyArray, UK);
+        verify(messageSource).getMessage("index.h1", emptyArray, UK);
+        verify(messageSource).getMessage("index.h2", emptyArray, UK);
+        verify(messageSource).getMessage("index.searchSummary", emptyArray, UK);
     }
 
     @Test

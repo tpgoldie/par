@@ -1,4 +1,4 @@
-package com.tpg.par.web.app;
+package com.tpg.par.service;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;

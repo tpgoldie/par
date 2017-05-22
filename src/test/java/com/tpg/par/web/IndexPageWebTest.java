@@ -1,7 +1,11 @@
 package com.tpg.par.web;
 
 import com.tpg.par.context.ParAppConfigurer;
+import com.tpg.par.domain.PlanningSearchType;
 import com.tpg.par.web.app.ParWebApplication;
+import com.tpg.par.web.components.CheckBox;
+import com.tpg.par.web.components.PlanningSearchTypeCheckBoxes;
+import com.tpg.par.web.components.SimpleSearchTab;
 import com.tpg.par.web.context.ParWebApplicationInitializer;
 import com.tpg.par.web.context.ParWebConfigurer;
 import com.tpg.par.web.controllers.SearchController;
@@ -15,6 +19,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -44,9 +50,17 @@ public class IndexPageWebTest {
 
         String searchSummary = "Search for planning applications, appeals and enforcements by keyword, application reference, postcode or by a single line of an address.";
         assertThat(indexPage.getText("search-summary"), is(searchSummary));
+
+        assertSimpleSearchTab();
     }
 
-    private void assertTab(String tabId) {
-//        indexPage.getTab(tabId);
+    private void assertSimpleSearchTab() {
+        SimpleSearchTab tab = indexPage.getSimpleSearchTab();
+        Map<PlanningSearchType, CheckBox> checkBoxes = tab.getCheckBoxes();
+
+        assertThat(checkBoxes.size(), is(3));
+
+        new PlanningSearchTypeCheckBoxes().getValues().stream()
+            .forEach(pst -> assertThat(pst.getValue().name().toLowerCase(), is(checkBoxes.get(pst.getValue()).getText())));
     }
 }

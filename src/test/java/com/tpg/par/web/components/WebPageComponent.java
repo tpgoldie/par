@@ -5,7 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public abstract class WebPageComponent {
-    private final WebDriver webDriver;
+    protected final WebDriver webDriver;
     private final By id;
 
     WebPageComponent(WebDriver webDriver, By id) {

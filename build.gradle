@@ -12,6 +12,8 @@ repositories {
 ext {
     springBootVersion = '1.5.3.RELEASE'
 
+    apacheCommonsLangVersion = '3.5'
+
     seleniumVersion = '3.4.0'
 
     junitVersion = '4.12'
@@ -27,6 +29,7 @@ dependencies {
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: springBootVersion
 
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: apacheCommonsLangVersion
 
     testCompile group: 'junit', name: 'junit', version: junitVersion
 

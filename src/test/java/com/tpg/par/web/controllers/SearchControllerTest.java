@@ -1,11 +1,9 @@
 package com.tpg.par.web.controllers;
 
-import com.tpg.par.domain.Address;
-import com.tpg.par.domain.DecisionStatus;
-import com.tpg.par.domain.SearchRequest;
-import com.tpg.par.domain.SearchResult;
+import com.tpg.par.domain.*;
 import com.tpg.par.domain.builders.AddressBuilder;
 import com.tpg.par.domain.builders.SearchResultBuilder;
+import com.tpg.par.web.components.PlanningSearchTypeCheckBox;
 import com.tpg.par.web.request.SimpleSearchRequest;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,11 +17,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.tpg.par.domain.DecisionStatus.Decided;
 import static com.tpg.par.domain.SearchFor.Applications;
 import static java.util.Arrays.asList;
 import static java.util.Locale.UK;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
@@ -61,6 +61,7 @@ public class SearchControllerTest extends ControllerTest {
         String h1 = "Welcome to the Public Access Register";
         String h2 = "Planning >> Simple Search";
         String searchSummary = "Search for planning applications, appeals and enforcements by keyword, application reference, postcode or by a single line of an address.";
+        String footerInfo = "2016 Public Access Register";
 
         String[] emptyArray = new String[0];
 
@@ -68,6 +69,10 @@ public class SearchControllerTest extends ControllerTest {
         when(messageSource.getMessage("index.h1", emptyArray, UK)).thenReturn(h1);
         when(messageSource.getMessage("index.h2", emptyArray, UK)).thenReturn(h2);
         when(messageSource.getMessage("index.searchSummary", emptyArray, UK)).thenReturn(searchSummary);
+        when(messageSource.getMessage("footer.info", emptyArray, UK)).thenReturn(footerInfo);
+
+        List<PlanningSearchTypeCheckBox> planningSearchTypeCheckBoxes = Stream.of(PlanningSearchType.values())
+                .map(PlanningSearchTypeCheckBox::new).collect(toList());
 
         mockMvc.perform(get("/par/")
             .contentType(TEXT_HTML)
@@ -78,12 +83,14 @@ public class SearchControllerTest extends ControllerTest {
         .andExpect(model().attribute("title", title))
         .andExpect(model().attribute("welcome", h1))
         .andExpect(model().attribute("simpleSearchSubTitle", h2))
-        .andExpect(model().attribute("searchSummary", searchSummary));
+        .andExpect(model().attribute("searchSummary", searchSummary))
+        .andExpect(model().attribute("planningSearchTypes", planningSearchTypeCheckBoxes));
 
         verify(messageSource).getMessage("index.title", emptyArray, UK);
         verify(messageSource).getMessage("index.h1", emptyArray, UK);
         verify(messageSource).getMessage("index.h2", emptyArray, UK);
         verify(messageSource).getMessage("index.searchSummary", emptyArray, UK);
+        verify(messageSource).getMessage("footer.info", emptyArray, UK);
     }
 
     @Test

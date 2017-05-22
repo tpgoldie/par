@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
->
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title th:text="${title}"/>
+    <title data-th-text="${title}"/>
 </head>
 <body>
-    <h1 th:text="${title}"/>
-    <div><p id="welcome" th:text="${welcome}"/></div>
-    <h2 th:text="${simpleSearchSubTitle}"/>
-    <div><p id="search-summary" th:text="${searchSummary}"/></div>
+    <h1 data-th-text="${title}"/>
+    <div><p id="welcome" data-th-text="${welcome}"/></div>
+    <h2 data-th-text="${simpleSearchSubTitle}"/>
+    <div><p id="search-summary" data-th-text="${searchSummary}"/></div>
+
+    <div id="main">
+        <div>
+            <div id="simple-search-tab">
+                <table id="planning-search-types">
+                    <tr data-th-each="pst : ${planningSearchTypes}">
+                        <td><input th:id="${pst.name}" type="checkbox" th:value="${pst.ordinal}" data-th-text="${pst.label}"/></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div th:insert="~{footer :: copy-section}"/>
 </body>
 </html>

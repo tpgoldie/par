@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.*;
 
 @Controller
-@RequestMapping("/par")
+@RequestMapping("par")
 public class SearchController {
     private static final List<PlanningSearchTypeCheckBox> PLANNING_SEARCH_TYPE_CHECK_BOXES = new PlanningSearchTypeCheckBoxes().getValues();
 

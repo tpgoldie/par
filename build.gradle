@@ -20,6 +20,8 @@ ext {
 
     htmlUnitVersion = '2.52.0'
 
+    h2Version = '1.4.195'
+
 }
 
 dependencies {
@@ -28,6 +30,10 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBootVersion
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: springBootVersion
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: springBootVersion
+
+//    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-elasticsearch', version: springBootVersion
 
     compile group: 'org.apache.commons', name: 'commons-lang3', version: apacheCommonsLangVersion
 
@@ -38,4 +44,6 @@ dependencies {
     testCompile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: seleniumVersion
 
     testCompile group: 'org.seleniumhq.selenium', name: 'selenium-remote-driver', version: seleniumVersion
+
+    testCompile group: 'com.h2database', name: 'h2', version: h2Version
 }

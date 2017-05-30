@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public abstract class WebPageComponent {
+abstract class WebPageComponent {
     protected final WebDriver webDriver;
     private final By by;
 
@@ -17,7 +17,11 @@ public abstract class WebPageComponent {
         return findElementBy().getText();
     }
 
-    protected WebElement findElementBy() {
+    WebElement findElementBy() {
         return webDriver.findElement(by);
+    }
+
+    public String getAttribute(String key) {
+        return findElementBy().getAttribute(key);
     }
 }

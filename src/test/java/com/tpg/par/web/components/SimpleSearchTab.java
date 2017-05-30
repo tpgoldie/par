@@ -46,4 +46,12 @@ public class SimpleSearchTab extends WebPageComponent {
     private void addOption(Map<StatusType, SelectOption> options, StatusTypeSelectOption selectOption) {
         options.put(selectOption.getStatusType(), new SelectOption(webDriver, id(selectOption.getLabel())));
     }
+
+    public InputField getSearchInput() {
+        return new InputField(webDriver, id("search-input"));
+    }
+
+    public Button getSearchButton() {
+        return new Button(webDriver, id("search"));
+    }
 }

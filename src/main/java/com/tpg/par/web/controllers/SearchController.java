@@ -51,12 +51,14 @@ public class SearchController {
         String h1 = messageSource.getMessage("index.h1", new String[0], locale);
         String h2 = messageSource.getMessage("index.h2", new String[0], locale);
         String searchSummary = messageSource.getMessage("index.searchSummary", new String[0], locale);
+        String searchButtonText = messageSource.getMessage("search.button.text", new String[0], locale);
         String footerInfo = messageSource.getMessage("footer.info", new String[0], locale);
 
         model.addAttribute("title", title);
         model.addAttribute("welcome", h1);
         model.addAttribute("simpleSearchSubTitle", h2);
         model.addAttribute("searchSummary", searchSummary);
+        model.addAttribute("searchButtonText", searchButtonText);
         model.addAttribute("footerInfo", footerInfo);
 
         return "index";

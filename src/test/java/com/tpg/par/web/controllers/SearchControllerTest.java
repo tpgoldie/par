@@ -71,7 +71,8 @@ public class SearchControllerTest extends ControllerTest {
         .andExpect(model().attribute("title", messages.get("index.title")))
         .andExpect(model().attribute("welcome", messages.get("index.h1")))
         .andExpect(model().attribute("simpleSearchSubTitle", messages.get("index.h2")))
-        .andExpect(model().attribute("searchSummary", messages.get("index.searchSummary")));
+        .andExpect(model().attribute("searchSummary", messages.get("index.searchSummary")))
+        .andExpect(model().attribute("searchButtonText", messages.get("search.button.text")));
 
         String[] emptyArray = new String[0];
 
@@ -84,6 +85,7 @@ public class SearchControllerTest extends ControllerTest {
         messages.put("index.h1", "Welcome to the Public Access Register");
         messages.put("index.h2", "Planning >> Simple Search");
         messages.put("index.searchSummary", "Search for planning applications, appeals and enforcements by keyword, application reference, postcode or by a single line of an address.");
+        messages.put("search.button.text", "Search");
         messages.put("footer.info", "2016 Public Access Register");
 
         String[] emptyArray = new String[0];
@@ -110,7 +112,8 @@ public class SearchControllerTest extends ControllerTest {
             .andExpect(status().isOk())
             .andExpect(view().name("index"))
         .andExpect(model().attribute("searchTypes", searchTypeCheckBoxes))
-        .andExpect(model().attribute("statusTypes", statusTypeSelectOptions));
+        .andExpect(model().attribute("statusTypes", statusTypeSelectOptions))
+        .andExpect(model().attribute("searchButtonText", "Search"));
 
         String[] emptyArray = new String[0];
 
@@ -143,7 +146,9 @@ public class SearchControllerTest extends ControllerTest {
                     .andExpect(jsonPath(String.format("$.values[%d].referenceNumber", i), is(searchResults.get(i).getReferenceNumber())))
                     .andExpect(jsonPath(String.format("$.values[%d].formattedDateReceived", i), is(searchResults.get(i).getFormattedDateReceived())))
                     .andExpect(jsonPath(String.format("$.values[%d].formattedDateValidated", i), is(searchResults.get(i).getFormattedDateValidated())));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
+                // nothing to do
             }
         });
 

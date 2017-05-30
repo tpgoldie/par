@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.openqa.selenium.By.tagName;
@@ -57,6 +58,7 @@ public class IndexPageWebTest {
         SimpleSearchTab tab = indexPage.getSimpleSearchTab();
         assertSearchTypes(tab);
         assertStatusTypes(tab);
+        assertSearchInput(tab);
     }
 
     private void assertStatusTypes(SimpleSearchTab tab) {
@@ -86,5 +88,14 @@ public class IndexPageWebTest {
         String expected = checkBoxes.get(pst.getSearchType()).getText().toUpperCase();
 
         assertThat(actual, is(expected));
+    }
+
+    private void assertSearchInput(SimpleSearchTab tab) {
+        InputField inputField = tab.getSearchInput();
+        assertThat(inputField, is(notNullValue()));
+        assertThat(inputField, hasProperty("nameAttribute", is("searchQuery")));
+
+        Button button = tab.getSearchButton();
+        assertThat(button, is(notNullValue()));
     }
 }

@@ -15,11 +15,15 @@
     <div id="main">
         <div>
             <div id="simple-search-tab">
-                <table id="planning-search-types">
-                    <tr data-th-each="pst : ${planningSearchTypes}">
+                <table id="search-types">
+                    <tr data-th-each="pst : ${searchTypes}">
                         <td><input th:id="${pst.name}" type="checkbox" th:value="${pst.ordinal}" data-th-text="${pst.label}"/></td>
                     </tr>
                 </table>
+
+                <select th:id="status-types" th:field="*{statusTypes}">
+                    <option th:each="pst : ${statusTypes}" th:id="${pst.label}" th:value="${pst.label}" th:text="${pst.name}"/>
+                </select>
             </div>
         </div>
     </div>

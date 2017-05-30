@@ -3,7 +3,8 @@ package com.tpg.par.web.controllers;
 import com.tpg.par.domain.*;
 import com.tpg.par.domain.builders.AddressBuilder;
 import com.tpg.par.domain.builders.SearchResultBuilder;
-import com.tpg.par.web.components.PlanningSearchTypeCheckBox;
+import com.tpg.par.web.components.SearchTypeCheckBox;
+import com.tpg.par.web.components.StatusTypeSelectOption;
 import com.tpg.par.web.request.SimpleSearchRequest;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +17,9 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.tpg.par.domain.DecisionStatus.Decided;
@@ -57,22 +60,7 @@ public class SearchControllerTest extends ControllerTest {
 
     @Test
     public void handleIndexRequest_indexRequest_indexViewReturned() throws Exception {
-        String title = "Public Access Register";
-        String h1 = "Welcome to the Public Access Register";
-        String h2 = "Planning >> Simple Search";
-        String searchSummary = "Search for planning applications, appeals and enforcements by keyword, application reference, postcode or by a single line of an address.";
-        String footerInfo = "2016 Public Access Register";
-
-        String[] emptyArray = new String[0];
-
-        when(messageSource.getMessage("index.title", emptyArray, UK)).thenReturn(title);
-        when(messageSource.getMessage("index.h1", emptyArray, UK)).thenReturn(h1);
-        when(messageSource.getMessage("index.h2", emptyArray, UK)).thenReturn(h2);
-        when(messageSource.getMessage("index.searchSummary", emptyArray, UK)).thenReturn(searchSummary);
-        when(messageSource.getMessage("footer.info", emptyArray, UK)).thenReturn(footerInfo);
-
-        List<PlanningSearchTypeCheckBox> planningSearchTypeCheckBoxes = Stream.of(PlanningSearchType.values())
-                .map(PlanningSearchTypeCheckBox::new).collect(toList());
+        Map<String, String> messages = setUpMessages();
 
         mockMvc.perform(get("/par/")
             .contentType(TEXT_HTML)
@@ -80,17 +68,53 @@ public class SearchControllerTest extends ControllerTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(view().name("index"))
-        .andExpect(model().attribute("title", title))
-        .andExpect(model().attribute("welcome", h1))
-        .andExpect(model().attribute("simpleSearchSubTitle", h2))
-        .andExpect(model().attribute("searchSummary", searchSummary))
-        .andExpect(model().attribute("planningSearchTypes", planningSearchTypeCheckBoxes));
+        .andExpect(model().attribute("title", messages.get("index.title")))
+        .andExpect(model().attribute("welcome", messages.get("index.h1")))
+        .andExpect(model().attribute("simpleSearchSubTitle", messages.get("index.h2")))
+        .andExpect(model().attribute("searchSummary", messages.get("index.searchSummary")));
 
-        verify(messageSource).getMessage("index.title", emptyArray, UK);
-        verify(messageSource).getMessage("index.h1", emptyArray, UK);
-        verify(messageSource).getMessage("index.h2", emptyArray, UK);
-        verify(messageSource).getMessage("index.searchSummary", emptyArray, UK);
-        verify(messageSource).getMessage("footer.info", emptyArray, UK);
+        String[] emptyArray = new String[0];
+
+        messages.entrySet().forEach(es -> verify(messageSource).getMessage(es.getKey(), emptyArray, UK));
+    }
+
+    private Map<String, String> setUpMessages() {
+        Map<String, String> messages = new HashMap<>();
+        messages.put("index.title", "Public Access Register");
+        messages.put("index.h1", "Welcome to the Public Access Register");
+        messages.put("index.h2", "Planning >> Simple Search");
+        messages.put("index.searchSummary", "Search for planning applications, appeals and enforcements by keyword, application reference, postcode or by a single line of an address.");
+        messages.put("footer.info", "2016 Public Access Register");
+
+        String[] emptyArray = new String[0];
+
+        messages.entrySet().forEach(es -> when(messageSource.getMessage(es.getKey(), emptyArray, UK)).thenReturn(es.getValue()));
+
+        return messages;
+    }
+
+    @Test
+    public void handleIndexRequest_indexRequest_modelIsPopulated() throws Exception {
+        Map<String, String> messages = setUpMessages();
+
+        List<SearchTypeCheckBox> searchTypeCheckBoxes = Stream.of(SearchType.values())
+            .map(SearchTypeCheckBox::new).collect(toList());
+
+        List<StatusTypeSelectOption> statusTypeSelectOptions = Stream.of(StatusType.values())
+            .map(StatusTypeSelectOption::new).collect(toList());
+
+        mockMvc.perform(get("/par/")
+            .contentType(TEXT_HTML)
+                .locale(UK))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(view().name("index"))
+        .andExpect(model().attribute("searchTypes", searchTypeCheckBoxes))
+        .andExpect(model().attribute("statusTypes", statusTypeSelectOptions));
+
+        String[] emptyArray = new String[0];
+
+        messages.entrySet().forEach(es -> verify(messageSource).getMessage(es.getKey(), emptyArray, UK));
     }
 
     @Test

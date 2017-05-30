@@ -11,7 +11,7 @@ public class CheckBox extends WebPageComponent {
 
     @Override
     public String getText() {
-        HtmlUnitWebElement element = (HtmlUnitWebElement) findElementById();
+        HtmlUnitWebElement element = (HtmlUnitWebElement) findElementBy();
 
         return element.getAttribute("id");
     }

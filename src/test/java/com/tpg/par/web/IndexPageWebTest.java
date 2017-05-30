@@ -1,11 +1,10 @@
 package com.tpg.par.web;
 
 import com.tpg.par.context.ParAppConfigurer;
-import com.tpg.par.domain.PlanningSearchType;
+import com.tpg.par.domain.SearchType;
+import com.tpg.par.domain.StatusType;
 import com.tpg.par.web.app.ParWebApplication;
-import com.tpg.par.web.components.CheckBox;
-import com.tpg.par.web.components.PlanningSearchTypeCheckBoxes;
-import com.tpg.par.web.components.SimpleSearchTab;
+import com.tpg.par.web.components.*;
 import com.tpg.par.web.context.ParWebApplicationInitializer;
 import com.tpg.par.web.context.ParWebConfigurer;
 import com.tpg.par.web.controllers.SearchController;
@@ -56,11 +55,36 @@ public class IndexPageWebTest {
 
     private void assertSimpleSearchTab() {
         SimpleSearchTab tab = indexPage.getSimpleSearchTab();
-        Map<PlanningSearchType, CheckBox> checkBoxes = tab.getCheckBoxes();
+        assertSearchTypes(tab);
+        assertStatusTypes(tab);
+    }
+
+    private void assertStatusTypes(SimpleSearchTab tab) {
+        Map<StatusType, SelectOption> selectOptions = tab.getStatusTypeSelectOptions();
+
+        assertThat(selectOptions.size(), is(3));
+
+        new StatusTypeSelectOptions().getValues().stream()
+                .forEach(so -> assertSelectOption(selectOptions, so));
+    }
+
+    private void assertSelectOption(Map<StatusType, SelectOption> selectOptions, StatusTypeSelectOption selectOption) {
+        assertThat(selectOption.getName(), is(selectOptions.get(selectOption.getStatusType()).getText()));
+    }
+
+    private void assertSearchTypes(SimpleSearchTab tab) {
+        Map<SearchType, CheckBox> checkBoxes = tab.getSearchTypeCheckBoxes();
 
         assertThat(checkBoxes.size(), is(3));
 
-        new PlanningSearchTypeCheckBoxes().getValues().stream()
-            .forEach(pst -> assertThat(pst.getValue().name().toLowerCase(), is(checkBoxes.get(pst.getValue()).getText())));
+        new SearchTypeCheckBoxes().getValues().stream()
+            .forEach(pst -> assertCheckBox(checkBoxes, pst));
+    }
+
+    private void assertCheckBox(Map<SearchType, CheckBox> checkBoxes, SearchTypeCheckBox pst) {
+        String actual = pst.getName().toUpperCase();
+        String expected = checkBoxes.get(pst.getSearchType()).getText().toUpperCase();
+
+        assertThat(actual, is(expected));
     }
 }

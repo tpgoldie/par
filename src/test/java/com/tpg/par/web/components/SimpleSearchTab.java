@@ -1,7 +1,7 @@
 package com.tpg.par.web.components;
 
-import com.tpg.par.domain.PlanningSearchType;
-import org.openqa.selenium.By;
+import com.tpg.par.domain.SearchType;
+import com.tpg.par.domain.StatusType;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,13 +9,15 @@ import org.openqa.selenium.WebElement;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static org.openqa.selenium.By.id;
+
 public class SimpleSearchTab extends WebPageComponent {
     public SimpleSearchTab(WebDriver webDriver) {
-        super(webDriver, By.id("simple-search-tab"));
+        super(webDriver, id("simple-search-tab"));
     }
 
     private void switchToNextTab() {
-        WebElement element = findElementById();
+        WebElement element = findElementBy();
 
         element.sendKeys(Keys.CONTROL +"\t");
 
@@ -23,12 +25,25 @@ public class SimpleSearchTab extends WebPageComponent {
         webDriver.switchTo().defaultContent();
     }
 
-    public Map<PlanningSearchType, CheckBox> getCheckBoxes() {
-        Map<PlanningSearchType, CheckBox> cbs = new TreeMap<>();
+    public Map<SearchType, CheckBox> getSearchTypeCheckBoxes() {
+        Map<SearchType, CheckBox> cbs = new TreeMap<>();
 
-        new PlanningSearchTypeCheckBoxes().getValues().stream()
-                .forEach(cb -> cbs.put(cb.getValue(), new CheckBox(webDriver, By.id(cb.getName()))));
+        new SearchTypeCheckBoxes().getValues().stream()
+            .forEach(cb -> cbs.put(cb.getSearchType(), new CheckBox(webDriver, id(cb.getName()))));
 
         return cbs;
+    }
+
+    public Map<StatusType, SelectOption> getStatusTypeSelectOptions() {
+        Map<StatusType, SelectOption> options = new TreeMap<>();
+
+        new StatusTypeSelectOptions().getValues().stream()
+            .forEach(so -> addOption(options, so));
+
+        return options;
+    }
+
+    private void addOption(Map<StatusType, SelectOption> options, StatusTypeSelectOption selectOption) {
+        options.put(selectOption.getStatusType(), new SelectOption(webDriver, id(selectOption.getLabel())));
     }
 }

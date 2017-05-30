@@ -6,18 +6,18 @@ import org.openqa.selenium.WebElement;
 
 public abstract class WebPageComponent {
     protected final WebDriver webDriver;
-    private final By id;
+    private final By by;
 
-    WebPageComponent(WebDriver webDriver, By id) {
+    WebPageComponent(WebDriver webDriver, By by) {
         this.webDriver = webDriver;
-        this.id = id;
+        this.by = by;
     }
 
     public String getText() {
-        return findElementById().getText();
+        return findElementBy().getText();
     }
 
-    protected WebElement findElementById() {
-        return webDriver.findElement(id);
+    protected WebElement findElementBy() {
+        return webDriver.findElement(by);
     }
 }

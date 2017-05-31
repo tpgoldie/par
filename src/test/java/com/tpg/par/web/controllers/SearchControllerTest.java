@@ -5,7 +5,7 @@ import com.tpg.par.domain.builders.AddressBuilder;
 import com.tpg.par.domain.builders.SearchResultBuilder;
 import com.tpg.par.web.components.SearchTypeCheckBox;
 import com.tpg.par.web.components.StatusTypeSelectOption;
-import com.tpg.par.web.request.SimpleSearchRequest;
+import com.tpg.par.web.request.SimpleSearchWebRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -123,15 +123,15 @@ public class SearchControllerTest extends ControllerTest {
     @Test
     public void handleSimpleSearchRequest_simpleSearchRequest_searchResultsReturned() throws Exception {
         String searchTerm = "CR0 6DG";
-        SimpleSearchRequest simpleSearchRequest = new SimpleSearchRequest(Applications.name(), searchTerm, Decided.name());
+        SimpleSearchWebRequest simpleSearchWebRequest = new SimpleSearchWebRequest(Applications.name(), searchTerm, Decided.name());
         List<SearchResult> searchResults = buildSearchResults();
 
         when(applicationQueryService.findApplications(any(SearchRequest.class))).thenReturn(searchResults);
 
         ResultActions output = mockMvc.perform(post("/par/search")
-                .param("searchFor", simpleSearchRequest.getSearchFor())
-                .param("searchTerm", simpleSearchRequest.getSearchTerm())
-                .param("decisionStatus", simpleSearchRequest.getDecisionStatus())
+                .param("searchFor", simpleSearchWebRequest.getSearchFor())
+                .param("searchTerm", simpleSearchWebRequest.getSearchTerm())
+                .param("decisionStatus", simpleSearchWebRequest.getDecisionStatus())
                 .contentType(APPLICATION_FORM_URLENCODED))
                 .andDo(print())
                 .andExpect(status().isOk());

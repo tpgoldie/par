@@ -6,7 +6,7 @@ import com.tpg.par.web.components.SearchTypeCheckBox;
 import com.tpg.par.web.components.SearchTypeCheckBoxes;
 import com.tpg.par.web.components.StatusTypeSelectOption;
 import com.tpg.par.web.components.StatusTypeSelectOptions;
-import com.tpg.par.web.request.SimpleSearchRequest;
+import com.tpg.par.web.request.SimpleSearchWebRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
@@ -66,10 +66,10 @@ public class SearchController {
 
     @PostMapping(value = "/search", consumes = APPLICATION_FORM_URLENCODED_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
     public @ResponseBody
-    ResponseEntity<SearchResults> handleSearchRequest(SimpleSearchRequest simpleSearchRequest) {
-        SearchRequest searchRequest = new SearchRequest(SearchFor.valueOf(simpleSearchRequest.getSearchFor()),
-                simpleSearchRequest.getSearchTerm(),
-                DecisionStatus.valueOf(simpleSearchRequest.getDecisionStatus()));
+    ResponseEntity<SearchResults> handleSearchRequest(SimpleSearchWebRequest simpleSearchWebRequest) {
+        SearchRequest searchRequest = new SearchRequest(SearchFor.valueOf(simpleSearchWebRequest.getSearchFor()),
+                simpleSearchWebRequest.getSearchTerm(),
+                DecisionStatus.valueOf(simpleSearchWebRequest.getDecisionStatus()));
 
         List<SearchResult> searchResults = applicationQueryService.findApplications(searchRequest);
 

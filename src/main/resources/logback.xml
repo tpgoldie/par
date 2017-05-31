@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <!-- Log message format -->
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
-            </pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>access.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>access.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>combined</pattern>
         </encoder>
     </appender>
 
     <!-- Setting the root level of logging to INFO -->
     <root level="debug">
         <appender-ref ref="Console" />
+        <appender-ref ref="RollingFile" />
     </root>
 </configuration>

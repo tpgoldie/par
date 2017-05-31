@@ -1,13 +1,13 @@
 package com.tpg.par.web.request;
 
-public class SimpleSearchRequest {
+public class SimpleSearchWebRequest {
     private String searchFor;
     private String decisionStatus;
     private String searchTerm;
 
-    public SimpleSearchRequest() {}
+    public SimpleSearchWebRequest() {}
 
-    public SimpleSearchRequest(String searchFor, String searchTerm, String decisionStatus) {
+    public SimpleSearchWebRequest(String searchFor, String searchTerm, String decisionStatus) {
         this.setSearchFor(searchFor);
         this.setSearchTerm(searchTerm);
         this.setDecisionStatus(decisionStatus);

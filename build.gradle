@@ -14,6 +14,8 @@ ext {
 
     apacheCommonsLangVersion = '3.5'
 
+    logbackVersion = '1.2.3'
+
     seleniumVersion = '3.4.0'
 
     junitVersion = '4.12'
@@ -33,9 +35,11 @@ dependencies {
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: springBootVersion
 
-//    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-elasticsearch', version: springBootVersion
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-elasticsearch', version: springBootVersion
 
     compile group: 'org.apache.commons', name: 'commons-lang3', version: apacheCommonsLangVersion
+
+    compile group: 'ch.qos.logback', name: 'logback-access', version: logbackVersion
 
     testCompile group: 'junit', name: 'junit', version: junitVersion
 

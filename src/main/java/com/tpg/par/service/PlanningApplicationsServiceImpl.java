@@ -23,6 +23,12 @@ public class PlanningApplicationsServiceImpl implements PlanningApplicationsServ
     public List<PlanningApplication> simpleSearch(SimpleSearchRequest request) {
         Page<PlanningApplicationDocument> results = planningApplicationsQueryService.findByReferenceNumber(request.getQuery().trim(), request.getPageRequest());
 
+        boolean isEmpty = results == null || results.getContent().isEmpty();
+
+        if (isEmpty) {
+            results = planningApplicationsQueryService.findByPostCode(request.getQuery().trim(), request.getPageRequest());
+        }
+
         return results.getContent()
                 .stream()
                     .map(pad -> planningApplicationDocumentConverter.convert(pad))

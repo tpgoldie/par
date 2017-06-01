@@ -10,11 +10,14 @@ public class PlanningApplicationDocument {
 
     private String referenceNumber;
 
+    private String postCode;
+
     public PlanningApplicationDocument() {}
 
-    public PlanningApplicationDocument(String id, String referenceNumber) {
+    public PlanningApplicationDocument(String id, String referenceNumber, String postCode) {
         this.id = id;
         this.referenceNumber = referenceNumber;
+        this.postCode = postCode;
     }
 
     public String getId() {
@@ -31,6 +34,14 @@ public class PlanningApplicationDocument {
 
     public void setReferenceNumber(String referenceNumber) {
         this.referenceNumber = referenceNumber;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
     }
 
     @Override

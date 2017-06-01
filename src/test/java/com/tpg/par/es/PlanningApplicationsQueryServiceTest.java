@@ -33,7 +33,7 @@ public class PlanningApplicationsQueryServiceTest implements UniqueIdGeneration 
 
     @Test
     public void findByReferenceNumber() {
-        PlanningApplicationDocument planningApplication = new PlanningApplicationDocument(newId(), newId());
+        PlanningApplicationDocument planningApplication = new PlanningApplicationDocument(newId(), newId(), "CR0 1DD");
 
         PageRequest pageRequest  = new PageRequest(0, 10);
 

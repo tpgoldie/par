@@ -24,4 +24,9 @@ public class PlanningApplicationsQueryServiceImpl implements PlanningApplication
         LOG.debug(outcome.toString());
         return outcome;
     }
+
+    @Override
+    public Page<PlanningApplicationDocument> findByPostCode(String postCode, Pageable pageable) {
+        return null;
+    }
 }

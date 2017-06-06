@@ -9,4 +9,6 @@ public interface PlanningApplicationsQueryService {
     Page<PlanningApplicationDocument> findByReferenceNumber(String refNo, Pageable pageable);
 
     Page<PlanningApplicationDocument> findByPostCode(String postCode, Pageable pageable);
+
+    Page<PlanningApplicationDocument> findByLineOneOfAddress(String lineOneOfAddress, Pageable pageable);
 }

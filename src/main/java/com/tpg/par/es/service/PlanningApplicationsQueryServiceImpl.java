@@ -27,6 +27,15 @@ public class PlanningApplicationsQueryServiceImpl implements PlanningApplication
 
     @Override
     public Page<PlanningApplicationDocument> findByPostCode(String postCode, Pageable pageable) {
-        return null;
+        Page<PlanningApplicationDocument> outcome = planningApplicationsQueryRepository.findByPostCode(postCode, pageable);
+        LOG.debug(outcome.toString());
+        return outcome;
+    }
+
+    @Override
+    public Page<PlanningApplicationDocument> findByLineOneOfAddress(String lineOneOfAddress, Pageable pageable) {
+        Page<PlanningApplicationDocument> outcome = planningApplicationsQueryRepository.findByAddressLineOne(lineOneOfAddress, pageable);
+        LOG.debug(outcome.toString());
+        return outcome;
     }
 }

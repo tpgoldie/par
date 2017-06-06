@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+import static com.tpg.par.service.requests.SimpleSearchRequestBuilder.simpleSearchBy;
 import static java.util.stream.Collectors.toList;
 
 public class PlanningApplicationsServiceImpl implements PlanningApplicationsService {
@@ -21,17 +22,10 @@ public class PlanningApplicationsServiceImpl implements PlanningApplicationsServ
     }
 
     public List<PlanningApplication> simpleSearch(SimpleSearchRequest request) {
-        Page<PlanningApplicationDocument> results = planningApplicationsQueryService.findByReferenceNumber(request.getQuery().trim(), request.getPageRequest());
+        Page<PlanningApplicationDocument> results = simpleSearchBy(planningApplicationsQueryService).apply(request);
 
-        boolean isEmpty = results == null || results.getContent().isEmpty();
-
-        if (isEmpty) {
-            results = planningApplicationsQueryService.findByPostCode(request.getQuery().trim(), request.getPageRequest());
-        }
-
-        return results.getContent()
-                .stream()
-                    .map(pad -> planningApplicationDocumentConverter.convert(pad))
-                    .collect(toList());
+        return results.getContent().stream()
+            .map(planningApplicationDocumentConverter::convert)
+            .collect(toList());
     }
 }

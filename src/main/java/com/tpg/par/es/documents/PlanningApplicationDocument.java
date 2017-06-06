@@ -10,13 +10,18 @@ public class PlanningApplicationDocument {
 
     private String referenceNumber;
 
+    private String addressLineOne;
+
     private String postCode;
 
     public PlanningApplicationDocument() {}
 
-    public PlanningApplicationDocument(String id, String referenceNumber, String postCode) {
+    public PlanningApplicationDocument(String id, String referenceNumber, String addressLineOne, String postCode) {
         this.id = id;
+
         this.referenceNumber = referenceNumber;
+
+        this.addressLineOne = addressLineOne;
         this.postCode = postCode;
     }
 
@@ -47,5 +52,13 @@ public class PlanningApplicationDocument {
     @Override
     public String toString() {
         return referenceNumber;
+    }
+
+    public String getLineOneOfAddress() {
+        return addressLineOne;
+    }
+
+    public void setAddressLineOne(String addressLineOne) {
+        this.addressLineOne = addressLineOne;
     }
 }

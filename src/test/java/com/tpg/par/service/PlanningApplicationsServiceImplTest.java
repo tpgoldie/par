@@ -17,11 +17,11 @@ import java.util.List;
 
 import static com.tpg.par.domain.SearchType.Applications;
 import static com.tpg.par.domain.StatusType.Current;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PlanningApplicationsServiceImplTest implements UniqueIdGeneration {
@@ -29,20 +29,21 @@ public class PlanningApplicationsServiceImplTest implements UniqueIdGeneration {
     private PlanningApplicationsQueryService planningApplicationsQueryService;
 
     @InjectMocks
-    private PlanningApplicationsServiceImpl service;
+    private PlanningApplicationsServiceImpl planningApplicationsServiceImpl;
+
+    private PageRequest pageRequest = new PageRequest(0, 5);
 
     @Test
-    public void simpleSearchByReferenceNumber() {
-        PageRequest pageRequest = new PageRequest(0, 5);
-        PlanningApplicationDocument planningApplicationDocument = new PlanningApplicationDocument(newId(), newId(), "");
+    public void simpleSearchCascadesToSearchReferenceNumber() {
+        PlanningApplicationDocument planningApplicationDocument = new PlanningApplicationDocument(newId(), newId(),"", "");
 
-        SimpleSearchRequest request = new SimpleSearchRequest(Applications, Current,
-        planningApplicationDocument.getReferenceNumber(), pageRequest);
+        SimpleSearchRequest request = buildSimpleSearchRequest(planningApplicationDocument.getReferenceNumber(), pageRequest);
 
-        Page<PlanningApplicationDocument> page = new PageImpl<>(singletonList(planningApplicationDocument), pageRequest, 5);
+        Page<PlanningApplicationDocument> page = buildPage(planningApplicationDocument);
+
         when(planningApplicationsQueryService.findByReferenceNumber(planningApplicationDocument.getReferenceNumber(), pageRequest)).thenReturn(page);
 
-        List<PlanningApplication> actual = service.simpleSearch(request);
+        List<PlanningApplication> actual = planningApplicationsServiceImpl.simpleSearch(request);
 
         assertThat(actual, hasSize(1));
 
@@ -50,47 +51,45 @@ public class PlanningApplicationsServiceImplTest implements UniqueIdGeneration {
     }
 
     @Test
-    public void simpleSearchByPostCodeAndQUeryServiceReturnsNull() {
-        PageRequest pageRequest = new PageRequest(0, 5);
-        PlanningApplicationDocument planningApplicationDocument = new PlanningApplicationDocument(newId(), newId(), "CR0 0DD");
+    public void simpleSearchCascadesToSearchPostCode() {
+        PlanningApplicationDocument document = new PlanningApplicationDocument(newId(), newId(), "577 Davidie Road", "CR0 0DD");
 
-        SimpleSearchRequest request = new SimpleSearchRequest(Applications, Current,
-        planningApplicationDocument.getPostCode(), pageRequest);
+        SimpleSearchRequest request = buildSimpleSearchRequest(document.getPostCode(), pageRequest);
 
-        Page<PlanningApplicationDocument> page = new PageImpl<>(singletonList(planningApplicationDocument), pageRequest, 5);
+        Page<PlanningApplicationDocument> page = buildPage(document);
 
-        when(planningApplicationsQueryService.findByReferenceNumber(planningApplicationDocument.getPostCode(), pageRequest)).thenReturn(null);
-        when(planningApplicationsQueryService.findByPostCode(planningApplicationDocument.getPostCode(), pageRequest)).thenReturn(page);
+        when(planningApplicationsQueryService.findByPostCode(document.getPostCode(), pageRequest)).thenReturn(page);
 
-        List<PlanningApplication> actual = service.simpleSearch(request);
+        List<PlanningApplication> actual = planningApplicationsServiceImpl.simpleSearch(request);
 
         assertThat(actual, hasSize(1));
 
-        verify(planningApplicationsQueryService).findByPostCode(planningApplicationDocument.getPostCode(), pageRequest);
-        verify(planningApplicationsQueryService).findByReferenceNumber(planningApplicationDocument.getPostCode(), pageRequest);
-        verify(planningApplicationsQueryService, never()).findByReferenceNumber(planningApplicationDocument.getReferenceNumber(), pageRequest);
+        verify(planningApplicationsQueryService).findByPostCode(document.getPostCode(), pageRequest);
     }
-    
+
+    private PageImpl<PlanningApplicationDocument> buildPage(PlanningApplicationDocument document) {
+        return new PageImpl<>(singletonList(document), pageRequest, 5);
+    }
+
     @Test
-    public void simpleSearchByPostCodeAndQueryServiceReturnsNoContent() {
-        PageRequest pageRequest = new PageRequest(0, 5);
-        PlanningApplicationDocument planningApplicationDocument = new PlanningApplicationDocument(newId(), newId(), "CR0 0DD");
+    public void simpleSearchCascadesToFirstLineOfAddress() {
+        PlanningApplicationDocument document = new PlanningApplicationDocument(newId(), newId(), "577 Davidie Street", "CR0 7DD");
 
-        SimpleSearchRequest request = new SimpleSearchRequest(Applications, Current,
-        planningApplicationDocument.getPostCode(), pageRequest);
+        SimpleSearchRequest request = buildSimpleSearchRequest(document.getLineOneOfAddress(), pageRequest);
 
-        Page<PlanningApplicationDocument> page = new PageImpl<>(singletonList(planningApplicationDocument), pageRequest, 5);
+        Page<PlanningApplicationDocument> page = buildPage(document);
 
-        when(planningApplicationsQueryService.findByReferenceNumber(planningApplicationDocument.getPostCode(), pageRequest)).thenReturn(
-                new PageImpl<>(emptyList(), pageRequest, 5));
+        when(planningApplicationsQueryService.findByLineOneOfAddress(document.getLineOneOfAddress(), pageRequest))
+            .thenReturn(page);
 
-        when(planningApplicationsQueryService.findByPostCode(planningApplicationDocument.getPostCode(), pageRequest)).thenReturn(page);
-
-        List<PlanningApplication> actual = service.simpleSearch(request);
+        List<PlanningApplication> actual = planningApplicationsServiceImpl.simpleSearch(request);
 
         assertThat(actual, hasSize(1));
 
-        verify(planningApplicationsQueryService).findByPostCode(planningApplicationDocument.getPostCode(), pageRequest);
-        verify(planningApplicationsQueryService).findByReferenceNumber(planningApplicationDocument.getPostCode(), pageRequest);
+        verify(planningApplicationsQueryService).findByLineOneOfAddress(document.getLineOneOfAddress(), pageRequest);
+    }
+
+    private SimpleSearchRequest buildSimpleSearchRequest(String lineOneOfAddress, PageRequest pageRequest) {
+        return new SimpleSearchRequest(Applications, Current, lineOneOfAddress, pageRequest);
     }
 }

@@ -2,10 +2,9 @@ package com.tpg.par.service;
 
 import com.tpg.par.domain.Address;
 import com.tpg.par.domain.DecisionStatus;
-import com.tpg.par.domain.SearchRequest;
-import com.tpg.par.domain.SearchResult;
+import com.tpg.par.domain.PlanningApplication;
 import com.tpg.par.domain.builders.AddressBuilder;
-import com.tpg.par.domain.builders.SearchResultBuilder;
+import com.tpg.par.domain.builders.PlanningApplicationBuilder;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -16,17 +15,16 @@ import static com.tpg.par.domain.DecisionStatus.Decided;
 import static java.util.Arrays.asList;
 
 @Service
-public class RamBasedApplicationQueryHandler implements ApplicationQueryService {
+public class RamBasedApplicationQueryHandler {
     private AddressBuilder addressBuilder = new AddressBuilder();
-    private SearchResultBuilder searchResultBuilder = new SearchResultBuilder();
+    private PlanningApplicationBuilder planningApplicationBuilder = new PlanningApplicationBuilder();
 
-    @Override
-    public List<SearchResult> findApplications(SearchRequest searchRequest) {
+    public List<PlanningApplication> findApplications(SimpleSearchRequest searchRequest) {
         return buildSearchResults();
     }
 
 
-    private List<SearchResult> buildSearchResults() {
+    private List<PlanningApplication> buildSearchResults() {
         return asList(
             buildSearchResult("14/01860/LP",
                 "Erection of dormer extension in rear roof slope and rooflights in front roof slope",
@@ -57,11 +55,11 @@ public class RamBasedApplicationQueryHandler implements ApplicationQueryService 
                 .build();
     }
 
-    private SearchResult buildSearchResult(String referenceNumber, String summary,
+    private PlanningApplication buildSearchResult(String referenceNumber, String summary,
                                            ZonedDateTime dateReceived, ZonedDateTime dateValidated,
                                            Address address, DecisionStatus decisionStatus) {
 
-        return searchResultBuilder
+        return planningApplicationBuilder
                 .referenceNumber(referenceNumber)
                 .summary(summary)
                 .address(address)

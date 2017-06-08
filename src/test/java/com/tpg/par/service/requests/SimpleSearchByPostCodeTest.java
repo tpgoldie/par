@@ -1,6 +1,7 @@
 package com.tpg.par.service.requests;
 
 import com.tpg.par.es.documents.PlanningApplicationDocument;
+import com.tpg.par.model.PlanningApplicationDocumentFixture;
 import com.tpg.par.service.SimpleSearchRequest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -8,16 +9,16 @@ import org.springframework.data.domain.Page;
 
 import java.util.Optional;
 
-import static com.tpg.par.domain.SearchType.Applications;
-import static com.tpg.par.domain.StatusType.Current;
+import static com.tpg.par.domain.ApplicationType.Applications;
+import static com.tpg.par.domain.DecisionStatus.Current;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class SimpleSearchByPostCodeTest extends SimpleSearchByTest {
+public class SimpleSearchByPostCodeTest extends SimpleSearchByTest implements PlanningApplicationDocumentFixture {
     @InjectMocks
     private SimpleSearchByPostCode simpleSearchByPostCode;
 
-    private PlanningApplicationDocument document = new PlanningApplicationDocument(newId(), newId(), "577 Davidie Road", "CR0 8DD");
+    private PlanningApplicationDocument document = buildPlanningApplicationDocument(newId(), "577 Davidie Road", "CR0 8DD");
 
     @Test
     public void simpleSearch() {

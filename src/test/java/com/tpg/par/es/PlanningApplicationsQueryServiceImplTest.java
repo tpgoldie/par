@@ -1,9 +1,9 @@
 package com.tpg.par.es;
 
-import com.tpg.par.UniqueIdGeneration;
 import com.tpg.par.es.documents.PlanningApplicationDocument;
 import com.tpg.par.es.repositories.PlanningApplicationsQueryRepository;
 import com.tpg.par.es.service.PlanningApplicationsQueryServiceImpl;
+import com.tpg.par.model.PlanningApplicationDocumentFixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class PlanningApplicationsQueryServiceImplTest implements UniqueIdGeneration {
+public class PlanningApplicationsQueryServiceImplTest implements PlanningApplicationDocumentFixture {
 
     @Mock
     private PlanningApplicationsQueryRepository planningApplicationsQueryRepository;
@@ -35,7 +35,7 @@ public class PlanningApplicationsQueryServiceImplTest implements UniqueIdGenerat
 
     @Test
     public void findByReferenceNumber() {
-        PlanningApplicationDocument document = new PlanningApplicationDocument(newId(), newId(), "577 Davidie Road", "CR0 1DD");
+        PlanningApplicationDocument document = buildPlanningApplicationDocument(newId(), "577 Davidie Road", "CR0 1DD");
 
         Page<PlanningApplicationDocument> page = new PageImpl<>(singletonList(document), pageRequest, 1);
 
@@ -55,7 +55,7 @@ public class PlanningApplicationsQueryServiceImplTest implements UniqueIdGenerat
 
     @Test
     public void findByPostCode() {
-        PlanningApplicationDocument document = new PlanningApplicationDocument(newId(), newId(), "577 Davidie Road", "CR0 1DD");
+        PlanningApplicationDocument document = buildPlanningApplicationDocument(newId(), "577 Davidie Road", "CR0 1DD");
 
         Page<PlanningApplicationDocument> page = new PageImpl<>(singletonList(document), pageRequest, 1);
 
@@ -75,7 +75,7 @@ public class PlanningApplicationsQueryServiceImplTest implements UniqueIdGenerat
 
     @Test
     public void findByLineOneOfAddress() {
-        PlanningApplicationDocument document = new PlanningApplicationDocument(newId(), newId(), "577 Davidie Road", "CR0 1DD");
+        PlanningApplicationDocument document = buildPlanningApplicationDocument(newId(), "577 Davidie Road", "CR0 1DD");
 
         Page<PlanningApplicationDocument> page = new PageImpl<>(singletonList(document), pageRequest, 1);
 

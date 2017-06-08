@@ -1,10 +1,15 @@
 package com.tpg.par.web.controllers;
 
-import com.tpg.par.domain.*;
+import com.tpg.par.domain.Address;
+import com.tpg.par.domain.ApplicationType;
+import com.tpg.par.domain.DecisionStatus;
+import com.tpg.par.domain.PlanningApplication;
 import com.tpg.par.domain.builders.AddressBuilder;
-import com.tpg.par.domain.builders.SearchResultBuilder;
-import com.tpg.par.web.components.SearchTypeCheckBox;
-import com.tpg.par.web.components.StatusTypeSelectOption;
+import com.tpg.par.domain.builders.PlanningApplicationBuilder;
+import com.tpg.par.service.PlanningApplicationsService;
+import com.tpg.par.service.SimpleSearchRequest;
+import com.tpg.par.web.components.ApplicationTypeCheckBox;
+import com.tpg.par.web.components.DecisionStatusSelectOption;
 import com.tpg.par.web.request.SimpleSearchWebRequest;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static com.tpg.par.domain.ApplicationType.Applications;
 import static com.tpg.par.domain.DecisionStatus.Decided;
-import static com.tpg.par.domain.SearchFor.Applications;
 import static java.util.Arrays.asList;
 import static java.util.Locale.UK;
 import static java.util.stream.Collectors.toList;
@@ -40,10 +45,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(SearchController.class)
-public class SearchControllerTest extends ControllerTest {
+@WebMvcTest(SimpleSearchController.class)
+public class SimpleSearchControllerTest extends ControllerTest {
     private AddressBuilder addressBuilder;
-    private SearchResultBuilder searchResultBuilder;
+    private PlanningApplicationBuilder planningApplicationBuilder;
 
     @MockBean(name = "messageSource")
     private MessageSource messageSource;
@@ -51,11 +56,14 @@ public class SearchControllerTest extends ControllerTest {
     @MockBean(name = "healthIndicator")
     private HealthIndicator healthIndicator;
 
+    @MockBean
+    private PlanningApplicationsService planningApplicationsService;
+
     @Before
     public void setUp() {
         addressBuilder = new AddressBuilder();
 
-        searchResultBuilder = new SearchResultBuilder();
+        planningApplicationBuilder = new PlanningApplicationBuilder();
     }
 
     @Test
@@ -68,6 +76,9 @@ public class SearchControllerTest extends ControllerTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(view().name("index"))
+        .andExpect(model().attribute("offset", 0))
+        .andExpect(model().attribute("pageNumber", 0))
+        .andExpect(model().attribute("limit", 10))
         .andExpect(model().attribute("title", messages.get("index.title")))
         .andExpect(model().attribute("welcome", messages.get("index.h1")))
         .andExpect(model().attribute("simpleSearchSubTitle", messages.get("index.h2")))
@@ -99,11 +110,11 @@ public class SearchControllerTest extends ControllerTest {
     public void handleIndexRequest_indexRequest_modelIsPopulated() throws Exception {
         Map<String, String> messages = setUpMessages();
 
-        List<SearchTypeCheckBox> searchTypeCheckBoxes = Stream.of(SearchType.values())
-            .map(SearchTypeCheckBox::new).collect(toList());
+        List<ApplicationTypeCheckBox> applicationTypeCheckBoxes = Stream.of(ApplicationType.values())
+            .map(ApplicationTypeCheckBox::new).collect(toList());
 
-        List<StatusTypeSelectOption> statusTypeSelectOptions = Stream.of(StatusType.values())
-            .map(StatusTypeSelectOption::new).collect(toList());
+        List<DecisionStatusSelectOption> decisionStatusSelectOptions = Stream.of(DecisionStatus.values())
+            .map(DecisionStatusSelectOption::new).collect(toList());
 
         mockMvc.perform(get("/par/")
             .contentType(TEXT_HTML)
@@ -111,9 +122,12 @@ public class SearchControllerTest extends ControllerTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(view().name("index"))
-        .andExpect(model().attribute("searchTypes", searchTypeCheckBoxes))
-        .andExpect(model().attribute("statusTypes", statusTypeSelectOptions))
-        .andExpect(model().attribute("searchButtonText", "Search"));
+            .andExpect(model().attribute("offset", is(0)))
+            .andExpect(model().attribute("pageNumber", is(0)))
+            .andExpect(model().attribute("limit", is(10)))
+            .andExpect(model().attribute("applicationTypes", applicationTypeCheckBoxes))
+            .andExpect(model().attribute("decisionStatusTypes", decisionStatusSelectOptions))
+            .andExpect(model().attribute("searchButtonText", "Search"));
 
         String[] emptyArray = new String[0];
 
@@ -121,20 +135,29 @@ public class SearchControllerTest extends ControllerTest {
     }
 
     @Test
-    public void handleSimpleSearchRequest_simpleSearchRequest_searchResultsReturned() throws Exception {
+    public void handleSimpleSearchRequestForFirstPage_simpleSearchRequest_searchResultsReturned() throws Exception {
         String searchTerm = "CR0 6DG";
-        SimpleSearchWebRequest simpleSearchWebRequest = new SimpleSearchWebRequest(Applications.name(), searchTerm, Decided.name());
-        List<SearchResult> searchResults = buildSearchResults();
+        SimpleSearchWebRequest simpleSearchWebRequest = buildSimpleSearchWebRequest(Applications, Decided, searchTerm);
 
-        when(applicationQueryService.findApplications(any(SearchRequest.class))).thenReturn(searchResults);
+        List<PlanningApplication> searchResults = buildSearchResults();
+
+        when(planningApplicationsService.simpleSearch(any(SimpleSearchRequest.class))).thenReturn(searchResults);
 
         ResultActions output = mockMvc.perform(post("/par/search")
-                .param("searchFor", simpleSearchWebRequest.getSearchFor())
+                .param("pageNumber", "0")
+                .param("offset", "0")
+                .param("pageNumber", "0")
+                .param("limit", "20")
+                .param("applicationType", simpleSearchWebRequest.getApplicationType())
                 .param("searchTerm", simpleSearchWebRequest.getSearchTerm())
                 .param("decisionStatus", simpleSearchWebRequest.getDecisionStatus())
                 .contentType(APPLICATION_FORM_URLENCODED))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.offset", is(0)))
+                .andExpect(jsonPath("$.pageNumber", is(0)))
+                .andExpect(jsonPath("$.limit", is(20)));
+
 
         List<Integer> indices = asList(0, 1);
 
@@ -152,17 +175,31 @@ public class SearchControllerTest extends ControllerTest {
             }
         });
 
-        ArgumentCaptor<SearchRequest> searchRequestArgumentCaptor = ArgumentCaptor.forClass(SearchRequest.class);
+        ArgumentCaptor<SimpleSearchRequest> searchRequestArgumentCaptor = ArgumentCaptor.forClass(SimpleSearchRequest.class);
 
-        verify(applicationQueryService).findApplications(searchRequestArgumentCaptor.capture());
+        verify(planningApplicationsService).simpleSearch(searchRequestArgumentCaptor.capture());
 
-        SearchRequest actual = searchRequestArgumentCaptor.getValue();
-        assertThat(actual, hasProperty("searchFor", is(Applications)));
-        assertThat(actual, hasProperty("searchTerm", is(searchTerm)));
+        SimpleSearchRequest actual = searchRequestArgumentCaptor.getValue();
+
+        assertThat(actual, hasProperty("applicationType", is(Applications)));
         assertThat(actual, hasProperty("decisionStatus", is(Decided)));
+        assertThat(actual.getPageRequest(), hasProperty("pageNumber", is(0)));
+        assertThat(actual.getPageRequest(), hasProperty("pageSize", is(20)));
+        assertThat(actual, hasProperty("query", is(searchTerm)));
     }
 
-    private List<SearchResult> buildSearchResults() {
+    private SimpleSearchWebRequest buildSimpleSearchWebRequest(ApplicationType applicationType,
+                                                               DecisionStatus decisionStatus,
+                                                               String searchTerm) {
+        SimpleSearchWebRequest request = new SimpleSearchWebRequest();
+        request.setApplicationType(applicationType.name());
+        request.setDecisionStatus(decisionStatus.name());
+        request.setSearchTerm(searchTerm);
+
+        return request;
+    }
+
+    private List<PlanningApplication> buildSearchResults() {
         return asList(
                 buildSearchResult("14/01860/LP",
                         "Erection of dormer extension in rear roof slope and rooflights in front roof slope",
@@ -194,11 +231,11 @@ public class SearchControllerTest extends ControllerTest {
             .build();
     }
 
-    private SearchResult buildSearchResult(String referenceNumber, String summary,
+    private PlanningApplication buildSearchResult(String referenceNumber, String summary,
                                            ZonedDateTime dateReceived, ZonedDateTime dateValidated,
                                            Address address, DecisionStatus decisionStatus) {
 
-        return searchResultBuilder
+        return planningApplicationBuilder
                 .referenceNumber(referenceNumber)
                 .summary(summary)
                 .address(address)

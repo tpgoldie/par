@@ -1,6 +1,6 @@
 package com.tpg.par.web.controllers;
 
-import com.tpg.par.service.ApplicationQueryService;
+import com.tpg.par.es.repositories.PlanningApplicationsQueryRepository;
 import com.tpg.par.web.app.ParWebApplication;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 public abstract class ControllerTest {
     @Autowired
-    protected MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @MockBean
-    protected ApplicationQueryService applicationQueryService;
+    PlanningApplicationsQueryRepository planningApplicationsQueryRepository;
 }

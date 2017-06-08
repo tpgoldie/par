@@ -1,7 +1,7 @@
 package com.tpg.par.web.components;
 
-import com.tpg.par.domain.SearchType;
-import com.tpg.par.domain.StatusType;
+import com.tpg.par.domain.ApplicationType;
+import com.tpg.par.domain.DecisionStatus;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -25,17 +25,17 @@ public class SimpleSearchTab extends WebPageComponent {
         webDriver.switchTo().defaultContent();
     }
 
-    public Map<SearchType, CheckBox> getSearchTypeCheckBoxes() {
-        Map<SearchType, CheckBox> cbs = new TreeMap<>();
+    public Map<ApplicationType, CheckBox> getSearchTypeCheckBoxes() {
+        Map<ApplicationType, CheckBox> cbs = new TreeMap<>();
 
-        new SearchTypeCheckBoxes().getValues().stream()
-            .forEach(cb -> cbs.put(cb.getSearchType(), new CheckBox(webDriver, id(cb.getName()))));
+        new ApplicationTypeCheckBoxes().getValues().stream()
+            .forEach(cb -> cbs.put(cb.getApplicationType(), new CheckBox(webDriver, id(cb.getName()))));
 
         return cbs;
     }
 
-    public Map<StatusType, SelectOption> getStatusTypeSelectOptions() {
-        Map<StatusType, SelectOption> options = new TreeMap<>();
+    public Map<DecisionStatus, SelectOption> getDecisionStatusSelectOptions() {
+        Map<DecisionStatus, SelectOption> options = new TreeMap<>();
 
         new StatusTypeSelectOptions().getValues().stream()
             .forEach(so -> addOption(options, so));
@@ -43,8 +43,8 @@ public class SimpleSearchTab extends WebPageComponent {
         return options;
     }
 
-    private void addOption(Map<StatusType, SelectOption> options, StatusTypeSelectOption selectOption) {
-        options.put(selectOption.getStatusType(), new SelectOption(webDriver, id(selectOption.getLabel())));
+    private void addOption(Map<DecisionStatus, SelectOption> options, DecisionStatusSelectOption selectOption) {
+        options.put(selectOption.getDecisionStatus(), new SelectOption(webDriver, id(selectOption.getLabel())));
     }
 
     public InputField getSearchInput() {

@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 
 import java.util.Optional;
 
-import static com.tpg.par.domain.SearchType.Applications;
-import static com.tpg.par.domain.StatusType.Current;
+import static com.tpg.par.domain.ApplicationType.Applications;
+import static com.tpg.par.domain.DecisionStatus.Current;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +21,7 @@ public class SimpleSearchByReferenceNumberTest extends SimpleSearchByTest {
     @Test
     public void simpleSearch() {
 
-        PlanningApplicationDocument document = buildDocument("577 Davidie Road", "CR0 8YY");
+        PlanningApplicationDocument document = buildPlanningApplicationDocument(newId(), "577 Davidie Road", "CR0 8YY");
 
         String refNo = document.getReferenceNumber();
 
@@ -40,7 +40,7 @@ public class SimpleSearchByReferenceNumberTest extends SimpleSearchByTest {
     @Test
     public void compositeSearch() {
 
-        PlanningApplicationDocument document = buildDocument("577 Davidie Road", "CR0 8YY");
+        PlanningApplicationDocument document = buildPlanningApplicationDocument(newId(), "577 Davidie Road", "CR0 8YY");
 
         Page<PlanningApplicationDocument> page = buildPage(null);
 

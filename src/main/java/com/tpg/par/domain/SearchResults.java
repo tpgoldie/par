@@ -12,13 +12,25 @@ import static java.util.Collections.unmodifiableList;
 @JsonRootName("searchResults")
 public class SearchResults {
     @JsonProperty
-    private  List<SearchResult> values;
+    private final int pageNumber;
 
-    public SearchResults(List<SearchResult> values) {
+    @JsonProperty
+    private final int offset;
+
+    @JsonProperty
+    private final int limit;
+
+    @JsonProperty
+    private List<PlanningApplication> values;
+
+    public SearchResults(int pageNumber, int offset, int limit, List<PlanningApplication> values) {
+        this.pageNumber = pageNumber;
+        this.offset = offset;
+        this.limit = limit;
         setValues(values);
     }
 
-    public void setValues(List<SearchResult> values) {
+    public void setValues(List<PlanningApplication> values) {
         this.values = unmodifiableList(new ArrayList<>(values));
     }
 
@@ -26,7 +38,19 @@ public class SearchResults {
         return values.size();
     }
 
-    public Stream<SearchResult> stream() {
+    public Stream<PlanningApplication> stream() {
         return values.stream();
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
     }
 }

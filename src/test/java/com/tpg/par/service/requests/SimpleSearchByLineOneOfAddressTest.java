@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 
 import java.util.Optional;
 
-import static com.tpg.par.domain.SearchType.Applications;
-import static com.tpg.par.domain.StatusType.Current;
+import static com.tpg.par.domain.ApplicationType.Applications;
+import static com.tpg.par.domain.DecisionStatus.Current;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +23,7 @@ public class SimpleSearchByLineOneOfAddressTest extends SimpleSearchByTest {
 
         String lineOne = "577 Davidie Road";
 
-        PlanningApplicationDocument document = buildDocument(lineOne, "CR0 8DD");
+        PlanningApplicationDocument document = buildPlanningApplicationDocument(newId(), lineOne, "CR0 8DD");
 
         Page<PlanningApplicationDocument> page = buildPage(document);
 
@@ -43,7 +43,7 @@ public class SimpleSearchByLineOneOfAddressTest extends SimpleSearchByTest {
         String lineOne = "577 Davidie Road";
         String postCode = "CR0 8DD";
 
-        PlanningApplicationDocument document = buildDocument(lineOne, postCode);
+        PlanningApplicationDocument document = buildPlanningApplicationDocument(newId(), lineOne, postCode);
 
         Page<PlanningApplicationDocument> page = buildPage(null);
 

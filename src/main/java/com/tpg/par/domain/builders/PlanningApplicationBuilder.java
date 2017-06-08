@@ -2,11 +2,11 @@ package com.tpg.par.domain.builders;
 
 import com.tpg.par.domain.Address;
 import com.tpg.par.domain.DecisionStatus;
-import com.tpg.par.domain.SearchResult;
+import com.tpg.par.domain.PlanningApplication;
 
 import java.time.ZonedDateTime;
 
-public class SearchResultBuilder {
+public class PlanningApplicationBuilder {
     private String referenceNumber;
     private String summary;
     private Address address;
@@ -14,38 +14,38 @@ public class SearchResultBuilder {
     private ZonedDateTime dateValidated;
     private DecisionStatus decisionStatus;
 
-    public SearchResultBuilder summary(String value) {
+    public PlanningApplicationBuilder summary(String value) {
         summary = value;
         return this;
     }
 
-    public SearchResultBuilder referenceNumber(String value) {
+    public PlanningApplicationBuilder referenceNumber(String value) {
         referenceNumber = value;
         return this;
     }
 
-    public SearchResultBuilder address(Address value) {
+    public PlanningApplicationBuilder address(Address value) {
         address = value;
         return this;
     }
 
-    public SearchResultBuilder dateReceived(ZonedDateTime value) {
+    public PlanningApplicationBuilder dateReceived(ZonedDateTime value) {
         dateReceived = value;
         return this;
     }
 
-    public SearchResultBuilder dateValidated(ZonedDateTime value) {
+    public PlanningApplicationBuilder dateValidated(ZonedDateTime value) {
         dateValidated = value;
         return this;
     }
 
-    public SearchResultBuilder decisionStatus(DecisionStatus value) {
+    public PlanningApplicationBuilder decisionStatus(DecisionStatus value) {
         decisionStatus = value;
         return this;
     }
 
-    public SearchResult build() {
-        return new SearchResult(referenceNumber, summary, address,
+    public PlanningApplication build() {
+        return new PlanningApplication(referenceNumber, summary, address,
                 dateReceived, dateValidated, decisionStatus);
     }
 }

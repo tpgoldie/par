@@ -1,9 +1,9 @@
 package com.tpg.par.service;
 
-import com.tpg.par.UniqueIdGeneration;
 import com.tpg.par.domain.PlanningApplication;
 import com.tpg.par.es.documents.PlanningApplicationDocument;
 import com.tpg.par.es.service.PlanningApplicationsQueryService;
+import com.tpg.par.model.PlanningApplicationDocumentFixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,8 +15,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
-import static com.tpg.par.domain.SearchType.Applications;
-import static com.tpg.par.domain.StatusType.Current;
+import static com.tpg.par.domain.ApplicationType.Applications;
+import static com.tpg.par.domain.DecisionStatus.Current;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class PlanningApplicationsServiceImplTest implements UniqueIdGeneration {
+public class PlanningApplicationsServiceImplTest implements PlanningApplicationDocumentFixture {
     @Mock
     private PlanningApplicationsQueryService planningApplicationsQueryService;
 
@@ -35,7 +35,7 @@ public class PlanningApplicationsServiceImplTest implements UniqueIdGeneration {
 
     @Test
     public void simpleSearchCascadesToSearchReferenceNumber() {
-        PlanningApplicationDocument planningApplicationDocument = new PlanningApplicationDocument(newId(), newId(),"", "");
+        PlanningApplicationDocument planningApplicationDocument = buildPlanningApplicationDocument(newId(), "", "");
 
         SimpleSearchRequest request = buildSimpleSearchRequest(planningApplicationDocument.getReferenceNumber(), pageRequest);
 
@@ -52,7 +52,7 @@ public class PlanningApplicationsServiceImplTest implements UniqueIdGeneration {
 
     @Test
     public void simpleSearchCascadesToSearchPostCode() {
-        PlanningApplicationDocument document = new PlanningApplicationDocument(newId(), newId(), "577 Davidie Road", "CR0 0DD");
+        PlanningApplicationDocument document = buildPlanningApplicationDocument(newId(), "577 Davidie Road", "CR8 0DQ");
 
         SimpleSearchRequest request = buildSimpleSearchRequest(document.getPostCode(), pageRequest);
 
@@ -73,7 +73,7 @@ public class PlanningApplicationsServiceImplTest implements UniqueIdGeneration {
 
     @Test
     public void simpleSearchCascadesToFirstLineOfAddress() {
-        PlanningApplicationDocument document = new PlanningApplicationDocument(newId(), newId(), "577 Davidie Street", "CR0 7DD");
+        PlanningApplicationDocument document = buildPlanningApplicationDocument(newId(), "577 Davidie Street", "CR0 7DD");
 
         SimpleSearchRequest request = buildSimpleSearchRequest(document.getLineOneOfAddress(), pageRequest);
 

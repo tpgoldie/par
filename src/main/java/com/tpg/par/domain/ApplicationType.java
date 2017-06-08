@@ -1,5 +1,5 @@
 package com.tpg.par.domain;
 
-public enum SearchFor {
+public enum ApplicationType {
     Applications, Appeals, Enforcements
 }

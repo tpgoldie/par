@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(HealthCheckController.class)
 public class HealthCheckControllerTest extends ControllerTest {
+
     @Test
     public void handleHealthCheckRequest_healthCheckRequest_healthCheckStatusGiven() throws Exception {
         mockMvc.perform(get("/par/health")

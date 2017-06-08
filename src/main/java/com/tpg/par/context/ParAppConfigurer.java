@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages = {"com.tpg.par.service"})
+@ComponentScan(basePackages = {"com.tpg.par.service", "com.tpg.par.es.service"})
 public class ParAppConfigurer {
     @Bean
     public HealthIndicator healthIndicator() {

@@ -1,20 +1,16 @@
 package com.tpg.par.web.request;
 
 public class SimpleSearchWebRequest {
-    private String searchFor;
+    private int pageNumber = 0;
+    private int offset = 0;
+    private int limit = 10;
+
+    private String applicationType;
     private String decisionStatus;
     private String searchTerm;
 
-    public SimpleSearchWebRequest() {}
-
-    public SimpleSearchWebRequest(String searchFor, String searchTerm, String decisionStatus) {
-        this.setSearchFor(searchFor);
-        this.setSearchTerm(searchTerm);
-        this.setDecisionStatus(decisionStatus);
-    }
-
-    public String getSearchFor() {
-        return searchFor;
+    public String getApplicationType() {
+        return applicationType;
     }
 
     public String getDecisionStatus() {
@@ -25,8 +21,8 @@ public class SimpleSearchWebRequest {
         return searchTerm;
     }
 
-    public void setSearchFor(String searchFor) {
-        this.searchFor = searchFor;
+    public void setApplicationType(String applicationType) {
+        this.applicationType = applicationType;
     }
 
     public void setDecisionStatus(String decisionStatus) {
@@ -35,5 +31,29 @@ public class SimpleSearchWebRequest {
 
     public void setSearchTerm(String searchTerm) {
         this.searchTerm = searchTerm;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
     }
 }

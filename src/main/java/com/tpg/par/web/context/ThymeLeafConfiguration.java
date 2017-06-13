@@ -5,13 +5,16 @@ import org.springframework.context.annotation.Bean;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.templateresolver.TemplateResolver;
 
 public interface ThymeLeafConfiguration {
 
     @Bean
-    default SpringResourceTemplateResolver templateResolver() {
+    default TemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-
+//        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+//        TemplateResolver templateResolver = new ServletContextTemplateResolver();
+//        templateResolver.setPrefix("classpath:/templates/");
         templateResolver.setPrefix("/templates/");
         templateResolver.setSuffix(".html");
 

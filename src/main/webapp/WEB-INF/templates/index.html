@@ -15,7 +15,7 @@
     <div id="main">
         <div>
             <div id="simple-search-tab">
-                <p id="searchForTitle" data-th-text="${searchForTitle}" />
+                <p id="searchForTitle" data-th-text="${searchForTitle}"/>
                 <table id="application-types">
                     <tr data-th-each="pst : ${applicationTypes}">
                         <td><input th:id="${pst.name}" type="checkbox" th:value="${pst.ordinal}" data-th-text="${pst.label}"/></td>

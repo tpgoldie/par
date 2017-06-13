@@ -12,4 +12,9 @@ public class ParWebConfigurer extends WebMvcConfigurerAdapter implements LocaleR
 
         registry.addInterceptor(localeChangeInterceptor());
     }
+
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler("/webapp/**").addResourceLocations("/webapp/");
+//    }
 }

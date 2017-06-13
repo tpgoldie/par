@@ -3,6 +3,7 @@ package com.tpg.par.web;
 import com.tpg.par.context.ParAppConfigurer;
 import com.tpg.par.domain.ApplicationType;
 import com.tpg.par.domain.DecisionStatus;
+import com.tpg.par.es.context.ElasticSearchConfig;
 import com.tpg.par.es.repositories.PlanningApplicationsQueryRepository;
 import com.tpg.par.web.app.ParWebApplication;
 import com.tpg.par.web.components.*;
@@ -13,10 +14,12 @@ import com.tpg.par.web.pages.IndexPage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -39,6 +42,12 @@ public class IndexPageWebTest {
 
     @Autowired
     private WebDriver webDriver;
+
+    @MockBean
+    ElasticSearchConfig elasticSearchConfig;
+
+    @Mock
+    ElasticsearchOperations elasticSearchOperations;
 
     private IndexPage indexPage;
 

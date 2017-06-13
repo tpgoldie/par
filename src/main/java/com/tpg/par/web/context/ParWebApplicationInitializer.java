@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class ParWebApplicationInitializer extends SpringBootServletInitializer {
     public static final String SERVLET_NAME = "par";
 
+    @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(ParWebApplicationInitializer.class, ParWebConfigurer.class);
     }

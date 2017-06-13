@@ -6,7 +6,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.time.ZonedDateTime;
 
-@Document(indexName = "planning-apps", type = "planningApplications")
+@Document(indexName = "planning-apps", type = "planningApplications", shards=1, replicas = 0)
 public class PlanningApplicationDocument {
     @Id
     private String id;

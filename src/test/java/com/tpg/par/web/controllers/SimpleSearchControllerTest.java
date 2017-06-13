@@ -1,17 +1,11 @@
 package com.tpg.par.web.controllers;
 
-import com.tpg.par.domain.Address;
-import com.tpg.par.domain.ApplicationType;
-import com.tpg.par.domain.DecisionStatus;
-import com.tpg.par.domain.PlanningApplication;
-import com.tpg.par.domain.builders.AddressBuilder;
-import com.tpg.par.domain.builders.PlanningApplicationBuilder;
+import com.tpg.par.domain.*;
 import com.tpg.par.service.PlanningApplicationsService;
 import com.tpg.par.service.SimpleSearchRequest;
 import com.tpg.par.web.components.ApplicationTypeCheckBox;
 import com.tpg.par.web.components.DecisionStatusSelectOption;
 import com.tpg.par.web.request.SimpleSearchWebRequest;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -20,8 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,9 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(SimpleSearchController.class)
-public class SimpleSearchControllerTest extends ControllerTest {
-    private AddressBuilder addressBuilder;
-    private PlanningApplicationBuilder planningApplicationBuilder;
+public class SimpleSearchControllerTest extends ControllerTest implements ZonedDateTimeFixture, AddressFixture,
+    PlanningApplicationFixture {
 
     @MockBean(name = "messageSource")
     private MessageSource messageSource;
@@ -58,13 +49,6 @@ public class SimpleSearchControllerTest extends ControllerTest {
 
     @MockBean
     private PlanningApplicationsService planningApplicationsService;
-
-    @Before
-    public void setUp() {
-        addressBuilder = new AddressBuilder();
-
-        planningApplicationBuilder = new PlanningApplicationBuilder();
-    }
 
     @Test
     public void handleIndexRequest_indexRequest_indexViewReturned() throws Exception {
@@ -83,6 +67,7 @@ public class SimpleSearchControllerTest extends ControllerTest {
         .andExpect(model().attribute("welcome", messages.get("index.h1")))
         .andExpect(model().attribute("simpleSearchSubTitle", messages.get("index.h2")))
         .andExpect(model().attribute("searchSummary", messages.get("index.searchSummary")))
+        .andExpect(model().attribute("searchForTitle", messages.get("index.searchForTitle")))
         .andExpect(model().attribute("searchButtonText", messages.get("search.button.text")));
 
         String[] emptyArray = new String[0];
@@ -96,6 +81,7 @@ public class SimpleSearchControllerTest extends ControllerTest {
         messages.put("index.h1", "Welcome to the Public Access Register");
         messages.put("index.h2", "Planning >> Simple Search");
         messages.put("index.searchSummary", "Search for planning applications, appeals and enforcements by keyword, application reference, postcode or by a single line of an address.");
+        messages.put("index.searchForTitle", "Search For:");
         messages.put("search.button.text", "Search");
         messages.put("footer.info", "2016 Public Access Register");
 
@@ -115,6 +101,8 @@ public class SimpleSearchControllerTest extends ControllerTest {
 
         List<DecisionStatusSelectOption> decisionStatusSelectOptions = Stream.of(DecisionStatus.values())
             .map(DecisionStatusSelectOption::new).collect(toList());
+
+        when(elasticSearchConfig.elasticsearchTemplate()).thenReturn(elasticSearchOperations);
 
         mockMvc.perform(get("/par/")
             .contentType(TEXT_HTML)
@@ -201,47 +189,19 @@ public class SimpleSearchControllerTest extends ControllerTest {
 
     private List<PlanningApplication> buildSearchResults() {
         return asList(
-                buildSearchResult("14/01860/LP",
-                        "Erection of dormer extension in rear roof slope and rooflights in front roof slope",
-                        buildDate(2014, 5, 8, 9),
-                        buildDate(2014, 5, 12, 17),
-                    buildAddress("580 Davidson Road", "Croydon", "Surrey", "United Kingdom", "CR0 6DG"),
-                    Decided),
+            buildSearchResult("14/01860/LP",
+                    "Erection of dormer extension in rear roof slope and rooflights in front roof slope",
+                    buildDate(2014, 5, 8, 9),
+                    buildDate(2014, 5, 12, 17),
+                buildAddress("580 Davidson Road", "Croydon", "Surrey", "United Kingdom", "CR0 6DG"),
+                Decided),
 
-                buildSearchResult("10/02094/LP",
-                        "Alterations and use of garage at rear as habitable room",
-                        buildDate(2010, 6, 24, 9),
-                        buildDate(2014, 6, 30, 17),
-                    buildAddress("542 Davidson Road", "Croydon", "Surrey", "United Kingdom", "CR0 6DG"),
-                    Decided)
-                );
-    }
-
-    private ZonedDateTime buildDate(int year, int month, int date, int hour) {
-        return ZonedDateTime.of(year, month, date, hour, 0, 0, 0, ZoneId.of("Europe/London"));
-    }
-
-    private Address buildAddress(String lineOne, String city, String region, String country, String postCode) {
-        return addressBuilder
-            .lineOne(lineOne)
-            .city(city)
-            .region(region)
-            .country(country)
-            .postCode(postCode)
-            .build();
-    }
-
-    private PlanningApplication buildSearchResult(String referenceNumber, String summary,
-                                           ZonedDateTime dateReceived, ZonedDateTime dateValidated,
-                                           Address address, DecisionStatus decisionStatus) {
-
-        return planningApplicationBuilder
-                .referenceNumber(referenceNumber)
-                .summary(summary)
-                .address(address)
-                .dateReceived(dateReceived)
-                .dateValidated(dateValidated)
-                .decisionStatus(decisionStatus)
-                .build();
+            buildSearchResult("10/02094/LP",
+                    "Alterations and use of garage at rear as habitable room",
+                    buildDate(2010, 6, 24, 9),
+                    buildDate(2014, 6, 30, 17),
+                buildAddress("542 Davidson Road", "Croydon", "Surrey", "United Kingdom", "CR0 6DG"),
+                Decided)
+            );
     }
  }

@@ -66,8 +66,9 @@ public class SimpleSearchControllerTest extends ControllerTest implements ZonedD
         .andExpect(model().attribute("title", messages.get("index.title")))
         .andExpect(model().attribute("welcome", messages.get("index.h1")))
         .andExpect(model().attribute("simpleSearchSubTitle", messages.get("index.h2")))
-        .andExpect(model().attribute("searchSummary", messages.get("index.searchSummary")))
-        .andExpect(model().attribute("searchForTitle", messages.get("index.searchForTitle")))
+        .andExpect(model().attribute("searchSummary", messages.get("index.search.summary")))
+        .andExpect(model().attribute("searchForTitle", messages.get("index.searchFor.title")))
+        .andExpect(model().attribute("searchInstruction", messages.get("index.search.instruction")))
         .andExpect(model().attribute("searchButtonText", messages.get("search.button.text")));
 
         String[] emptyArray = new String[0];
@@ -80,8 +81,9 @@ public class SimpleSearchControllerTest extends ControllerTest implements ZonedD
         messages.put("index.title", "Public Access Register");
         messages.put("index.h1", "Welcome to the Public Access Register");
         messages.put("index.h2", "Planning >> Simple Search");
-        messages.put("index.searchSummary", "Search for planning applications, appeals and enforcements by keyword, application reference, postcode or by a single line of an address.");
-        messages.put("index.searchForTitle", "Search For:");
+        messages.put("index.search.summary", "Search for planning applications, appeals and enforcements by keyword, application reference, postcode or by a single line of an address.");
+        messages.put("index.searchFor.title", "Search For:");
+        messages.put("index.search.instruction", "Enter a keyword, reference number, post code or single line of an address");
         messages.put("search.button.text", "Search");
         messages.put("footer.info", "2016 Public Access Register");
 

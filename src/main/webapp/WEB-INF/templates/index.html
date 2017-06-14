@@ -26,8 +26,9 @@
                     <option th:each="pst : ${decisionStatusTypes}" th:id="${pst.label}" th:value="${pst.label}" th:text="${pst.name }"/>
                 </select>
             </div>
+            <div><p data-th-text="${searchInstruction}"/></div>
             <div>
-                <input id="search-input" type="text" name="searchQuery" /><button id="search" th:text="${searchButtonLabel}"/>
+                <input id="search-input" type="text" name="searchQuery" /><input id="search" th:text="${searchButtonText}" type="submit"/>
             </div>
         </div>
     </div>

@@ -18,8 +18,9 @@ public class IndexModel {
         String title = messageSource.getMessage("index.title", emptyValue, locale);
         String h1 = messageSource.getMessage("index.h1", emptyValue, locale);
         String h2 = messageSource.getMessage("index.h2", emptyValue, locale);
-        String searchSummary = messageSource.getMessage("index.searchSummary", emptyValue, locale);
-        String searchForTitle = messageSource.getMessage("index.searchForTitle", emptyValue, locale);
+        String searchSummary = messageSource.getMessage("index.search.summary", emptyValue, locale);
+        String searchForTitle = messageSource.getMessage("index.searchFor.title", emptyValue, locale);
+        String searchInstruction = messageSource.getMessage("index.search.instruction", emptyValue, locale);
         String searchButtonText = messageSource.getMessage("search.button.text", emptyValue, locale);
         String footerInfo = messageSource.getMessage("footer.info", emptyValue, locale);
 
@@ -31,6 +32,7 @@ public class IndexModel {
         model.addAttribute("simpleSearchSubTitle", h2);
         model.addAttribute("searchSummary", searchSummary);
         model.addAttribute("searchForTitle", searchForTitle);
+        model.addAttribute("searchInstruction", searchInstruction);
         model.addAttribute("searchButtonText", searchButtonText);
         model.addAttribute("footerInfo", footerInfo);
     }

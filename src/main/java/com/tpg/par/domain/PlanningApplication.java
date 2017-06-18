@@ -39,7 +39,7 @@ public class PlanningApplication implements DateTimeFormatting {
     }
 
     public String getFormattedDateReceived() {
-        return dateReceived.format(dateTimeFormatter());
+        return EEEDDMMYYYYFormat(dateReceived);
     }
 
     public ZonedDateTime getDateValidated() {
@@ -47,7 +47,7 @@ public class PlanningApplication implements DateTimeFormatting {
     }
 
     public String getFormattedDateValidated() {
-        return dateValidated.format(dateTimeFormatter());
+        return EEEDDMMYYYYFormat(dateValidated);
     }
 
     public DecisionStatus getDecisionStatus() {

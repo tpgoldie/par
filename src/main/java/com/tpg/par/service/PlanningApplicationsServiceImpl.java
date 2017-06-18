@@ -1,9 +1,11 @@
 package com.tpg.par.service;
 
+import com.tpg.par.domain.NewPlanningApplication;
 import com.tpg.par.domain.PlanningApplication;
 import com.tpg.par.es.documents.PlanningApplicationDocument;
 import com.tpg.par.es.service.PlanningApplicationDocumentConverter;
 import com.tpg.par.es.service.PlanningApplicationsQueryService;
+import com.tpg.par.service.requests.NewPlanningApplicationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -31,5 +33,10 @@ public class PlanningApplicationsServiceImpl implements PlanningApplicationsServ
         return results.getContent().stream()
             .map(planningApplicationDocumentConverter::convert)
             .collect(toList());
+    }
+
+    @Override
+    public Success<NewPlanningApplication> savePlanningApplication(NewPlanningApplicationRequest newPlanningApplicationRequest) {
+        return null;
     }
 }

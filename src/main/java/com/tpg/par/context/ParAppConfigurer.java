@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(basePackages = {"com.tpg.par.service", "com.tpg.par.es.service"})
-public class ParAppConfigurer {
+public class ParAppConfigurer implements ObjectMapping {
     @Bean
     public HealthIndicator healthIndicator() {
         return new ParAppHealthIndicator();

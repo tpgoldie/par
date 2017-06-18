@@ -3,6 +3,7 @@ package com.tpg.par.domain;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 public class Address {
     private String lineOne;
@@ -13,7 +14,7 @@ public class Address {
     private String postCode;
 
 
-    public Address(String lineOne, Optional<String> lineTwo, String city, String region, String country, String postCode) {
+    Address(String lineOne, Optional<String> lineTwo, String city, String region, String country, String postCode) {
         this.lineOne = lineOne;
         this.lineTwo = lineTwo;
         this.city = city;
@@ -44,5 +45,48 @@ public class Address {
 
     public String getPostCode() {
         return postCode;
+    }
+
+    public static class Builder {
+        private String lineOne;
+        private Optional<String> lineTwo = empty();
+        private String city;
+        private String region;
+        private String country;
+        private String postCode;
+
+        public Builder lineOne(String value) {
+            lineOne = value;
+            return this;
+        }
+
+        public Builder lineTwo(String value) {
+            lineTwo = of(value);
+            return this;
+        }
+
+        public Builder city(String value) {
+            city = value;
+            return this;
+        }
+
+        public Builder region(String value) {
+            region = value;
+            return this;
+        }
+
+        public Builder country(String value) {
+            country = value;
+            return this;
+        }
+
+        public Builder postCode(String value) {
+            postCode = value;
+            return this;
+        }
+
+        public Address build() {
+            return new Address(lineOne, lineTwo, city, region, country, postCode);
+        }
     }
 }

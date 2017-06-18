@@ -3,7 +3,6 @@ package com.tpg.par.service;
 import com.tpg.par.domain.Address;
 import com.tpg.par.domain.DecisionStatus;
 import com.tpg.par.domain.PlanningApplication;
-import com.tpg.par.domain.builders.AddressBuilder;
 import com.tpg.par.domain.builders.PlanningApplicationBuilder;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,7 @@ import static java.util.Arrays.asList;
 
 @Service
 public class RamBasedApplicationQueryHandler {
-    private AddressBuilder addressBuilder = new AddressBuilder();
+    private Address.Builder addressBuilder = new Address.Builder();
     private PlanningApplicationBuilder planningApplicationBuilder = new PlanningApplicationBuilder();
 
     public List<PlanningApplication> findApplications(SimpleSearchRequest searchRequest) {
